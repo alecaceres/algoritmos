@@ -31,4 +31,10 @@ class grafo:
                 for v in fila:
                     v.addVecino(vecinos)
 
+    def __str__(self): # sirve para saber si los nodos fueron correctamente enlazados
+        for fila in self.filas:
+            for v in fila:
+                print("\nPosicion:", v.fila, ",", v.columna, "\nVecinos:")
+                for vecino in v.vecinos:
+                    print("(", vecino.fila, ",", vecino.columna, ")")
 a = grafo(8)
