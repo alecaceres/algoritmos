@@ -47,17 +47,23 @@ class grafo:
         return ""
 
 def solucion(tablero):
-    colocarReina(tablero, set(), tablero.raiz)
+    colocarReina(tablero, [], tablero.raiz)
     return tablero.soluciones
 
 def colocarReina(tablero, reinas, reina): # la entrada son las reinas colocadas y la nueva reina
-    for vecino in reina.vecinos:
-        colocarReina(tablero, reinas, vecino)
+    print(reina)
     for r in reinas:
-        if abs(r.fila - reina.fila) != abs(r.columna - reina.columna) and r.columna != reina.columna:
-            colocarReina(reinas, r)
+        if abs(r.fila - reina.fila) == abs(r.columna - reina.columna) or r.columna == reina.columna:
+            return
+
     if len(reina.vecinos) == 0:
         tablero.soluciones = tablero.soluciones + 1
+        return
+
+    for vecino in reina.vecinos:
+        reinas2 = reinas
+        reinas2.append(vecino)
+        colocarReina(tablero, reinas2, vecino)
 
 a = grafo() # por defecto es de 8x8
 print("El problema tiene", solucion(a), "soluciones")
