@@ -8,10 +8,17 @@ class nodo:
         for vecino in vecinos:
             self.vecinos.add(vecino)
 
+    def __str__(self):
+        print("Posicion:", self.fila, ",", self.columna, "\nVecinos:")
+        for vecino in self.vecinos:
+            print("(", vecino.fila, ",", vecino.columna, ")")
+        return "\n"
+
 class grafo:
     def __init__(self, n):
         self.filas = set()
-        self.filas.add(tuple([nodo(0,0)])) # el tablero vacío
+        self.raiz = nodo(0,0)
+        self.filas.add(tuple([self.raiz])) # el tablero vacío
         for i in range(1,n+1):
             fila = []
             for j in range(1, n+1):
@@ -31,10 +38,10 @@ class grafo:
                 for v in fila:
                     v.addVecino(vecinos)
 
-    def __str__(self): # sirve para saber si los nodos fueron correctamente enlazados
+    def __str__(self): # sirve para saber si los nodos fueron correctamente enlazados.
         for fila in self.filas:
             for v in fila:
-                print("\nPosicion:", v.fila, ",", v.columna, "\nVecinos:")
-                for vecino in v.vecinos:
-                    print("(", vecino.fila, ",", vecino.columna, ")")
+                print(v)
+        return ""
+
 a = grafo(8)
