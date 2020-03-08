@@ -15,9 +15,11 @@ class nodo:
         return "\n"
 
 class grafo:
-    def __init__(self, n):
+    def __init__(self, n = 8):
         self.filas = set()
+        self.soluciones = 0
         self.raiz = nodo(0,0)
+
         self.filas.add(tuple([self.raiz])) # el tablero vacío
         for i in range(1,n+1):
             fila = []
@@ -44,4 +46,18 @@ class grafo:
                 print(v)
         return ""
 
-a = grafo(8)
+def solucion(tablero):
+    colocarReina(tablero, set(), tablero.raiz)
+    return tablero.soluciones
+
+def colocarReina(tablero, reinas, reina): # la entrada son las reinas colocadas y la nueva reina
+    for vecino in reina.vecinos:
+        colocarReina(tablero, reinas, vecino)
+    for r in reinas:
+        if abs(r.fila - reina.fila) != abs(r.columna - reina.columna) and r.columna != reina.columna:
+            colocarReina(reinas, r)
+    if len(reina.vecinos) == 0:
+        tablero.soluciones = tablero.soluciones + 1
+
+a = grafo() # por defecto es de 8x8
+print("El problema tiene", solucion(a), "soluciones")
