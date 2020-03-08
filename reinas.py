@@ -10,12 +10,25 @@ class nodo:
 
 class grafo:
     def __init__(self, n):
-        self.nodos = set()
-        self.nodos = self.nodos.add(tuple([nodo(0,0)])) # el tablero vacío
+        self.filas = set()
+        self.filas = self.filas.add(tuple([nodo(0,0)])) # el tablero vacío
         for i in range(1,n+1):
             fila = []
             for j in range(1, n+1):
                 fila.append(nodo(i, j))
-            self.nodos.add(tuple(fila))
-        for v in self.nodos:
-            enlazar(v, self.nodos)
+            self.filas.add(tuple(fila))
+        self.recorrerFilas(n)
+
+    def recorrerFilas(tablero, n):
+        for fila in tablero.filas:
+            if fila[0].fila =! n:
+                filaVecino = fila[0].fila + 1
+                for fila2 in tablero.filas:
+                    if fila2[0].fila == filaVecino:
+                        vecinos = set()
+                        for v in fila2:
+                            vecinos = vecinos.add(v)
+                for v in fila:
+                    v.addVecino(vecinos)
+
+a = grafo(8)
