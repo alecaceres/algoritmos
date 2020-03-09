@@ -51,23 +51,23 @@ def solucion(tablero):
     return tablero.soluciones
 
 def colocarReina(tablero, reinas, reina): # la entrada son las reinas colocadas y la nueva reina
-    #print("=============================================\n", reina)
-    if reina.fila != 0:
-        reinas.pop()
+    #print("=============================================\n", reina, "\nReinas:")
 
     for r in reinas:
+        #print(r)
         if abs(r.fila - reina.fila) == abs(r.columna - reina.columna) or r.columna == reina.columna:
-            #print(r)
             return
-
     if len(reina.vecinos) == 0:
         tablero.soluciones = tablero.soluciones + 1
+        #print("\nSoluciones: ", tablero.soluciones)
         return
 
-    for vecino in reina.vecinos:
-        reinas2 = reinas
-        reinas2.append(vecino)
-        colocarReina(tablero, reinas2, vecino)
+    if reina.fila: reinas.append(reina)
 
-a = grafo() # por defecto es de 8x8
+    for vecino in reina.vecinos:
+        #reinas2 = reinas
+        #reinas2.append(vecino)
+        colocarReina(tablero, reinas.copy(), vecino)
+
+a = grafo()
 print("El problema tiene", solucion(a), "soluciones")
