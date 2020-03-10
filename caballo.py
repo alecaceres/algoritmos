@@ -75,3 +75,4 @@ def noesValido(tupla):
 
 a = grafo(3)
 print(a)
+print(len(a.nodos))
