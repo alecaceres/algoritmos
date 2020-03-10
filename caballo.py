@@ -33,18 +33,20 @@ class grafo:
         self.nodos = set()
         self.soluciones = 0
 
-        for i in range(1,n+1):
-            for j in range(1, n+1):
-                self.agregar(i, j)
-                self.nodos.add(nodo(i, j))
+        self.addNodos(nodo(1,1))
+
+        #for i in range(1,n+1):
+        #    for j in range(1, n+1):
+        #        self.agregar(i, j)
+        #        self.nodos.add(nodo(i, j))
                 #y tiene que agregar tambien los vecinos, y esos vecinos su vecinos y así ir verificando también que no se agregen lo mismo
                 #dos veces. Siempre que se cree un vecino, asignar también como vecino al nodo anterior
 
     def addNodos(self, celda):
         i = celda.fila
         j = celda.columna
-        vecinos = set(tuple([i-1, j-2]), tuple([i-1, j+2]), tuple([i+1, j-2]), tuple([i+1, j+2]),
-                tuple([i-2, j-1]), tuple([i-2, j+1]), tuple([i-2, j-1]), tuple([i-2, j+1]))
+        vecinos = {tuple([i-1, j-2]), tuple([i-1, j+2]), tuple([i+1, j-2]), tuple([i+1, j+2]),
+                tuple([i-2, j-1]), tuple([i-2, j+1]), tuple([i-2, j-1]), tuple([i-2, j+1])}
         vecinos = limpiar(vecinos)
         for i,j in vecinos:
             existe = False
@@ -57,10 +59,9 @@ class grafo:
             nodito.vecinos.add(celda)
             celda.vecinos.add(nodito)
         self.nodos.add(celda)
-        return self.copy()
 
 def limpiar(lista):
-    lista2 = lista
+    lista2 = lista.copy()
     for elemento in lista:
         if noesValido(elemento):
             lista2.remove(elemento)
