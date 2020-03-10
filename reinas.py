@@ -51,10 +51,7 @@ def solucion(tablero):
     return tablero.soluciones
 
 def colocarReina(tablero, reinas, reina): # la entrada son las reinas colocadas y la nueva reina
-    #print("=============================================\n", reina, "\nReinas:")
-
     for r in reinas:
-        #print(r)
         if abs(r.fila - reina.fila) == abs(r.columna - reina.columna) or r.columna == reina.columna:
             return
     if len(reina.vecinos) == 0:
