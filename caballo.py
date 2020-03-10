@@ -15,16 +15,10 @@ class nodo:
         return "\n"
 
 class grafo:
-    def __init__(self, n = 8):
-        self.nodos = set()
-        self.soluciones = 0
-
-        for i in range(1,n+1):
-            for j in range(1, n+1):
-                self = agregar(self, i, j)
-                self.nodos.add(nodo(i, j))
-                #y tiene que agregar tambien los vecinos, y esos vecinos su vecinos y así ir verificando también que no se agregen lo mismo
-                #dos veces. Siempre que se cree un vecino, asignar también como vecino al nodo anterior
+    def __str__(self):
+        for posicion in self.nodos:
+            print(posicion)
+        return "\n"
 
     def agregar(celdas, i, j):
         for celda in celdas.nodos:
@@ -32,8 +26,19 @@ class grafo:
                 return celdas
 
         celda = nodo(i,j)
-        celda.addVecinos(self)
+        celda.addVecino(celdas.nodos)
         celdas.nodos.add(celda)
+
+    def __init__(self, n = 8):
+        self.nodos = set()
+        self.soluciones = 0
+
+        for i in range(1,n+1):
+            for j in range(1, n+1):
+                self.agregar(i, j)
+                self.nodos.add(nodo(i, j))
+                #y tiene que agregar tambien los vecinos, y esos vecinos su vecinos y así ir verificando también que no se agregen lo mismo
+                #dos veces. Siempre que se cree un vecino, asignar también como vecino al nodo anterior
 
     def addNodos(self, celda):
         i = celda.fila
@@ -64,3 +69,6 @@ def limpiar(lista):
 def noesValido(tupla):
     i, j = tupla
     return i>0 and j>0
+
+a = grafo(3)
+print(a)
