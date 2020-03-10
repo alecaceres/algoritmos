@@ -45,8 +45,10 @@ class grafo:
     def addNodos(self, celda):
         i = celda.fila
         j = celda.columna
+        print(i, j)
         vecinos = {tuple([i-1, j-2]), tuple([i-1, j+2]), tuple([i+1, j-2]), tuple([i+1, j+2]),
-                tuple([i-2, j-1]), tuple([i-2, j+1]), tuple([i-2, j-1]), tuple([i-2, j+1])}
+                tuple([i-2, j-1]), tuple([i-2, j+1]), tuple([i+2, j-1]), tuple([i+2, j+1])}
+        print(vecinos)
         vecinos = limpiar(vecinos)
         for i,j in vecinos:
             existe = False
@@ -61,7 +63,6 @@ class grafo:
         self.nodos.add(celda)
 
 def limpiar(lista):
-    print(lista)
     lista2 = lista.copy()
     for elemento in lista:
         if noesValido(elemento):
@@ -70,7 +71,7 @@ def limpiar(lista):
 
 def noesValido(tupla):
     i, j = tupla
-    return i>0 and j>0
+    return i<1 or j<1
 
 a = grafo(3)
 print(a)
