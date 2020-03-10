@@ -61,6 +61,7 @@ class grafo:
         self.nodos.add(celda)
 
 def limpiar(lista):
+    print(lista)
     lista2 = lista.copy()
     for elemento in lista:
         if noesValido(elemento):
