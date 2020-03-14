@@ -33,8 +33,11 @@ class grafo:
         self.nodos = set()
         self.soluciones = 0
 
-        self.addNodos(nodo(1,1))
+        self.addNodos(n)
 
+        for node in self.addNodos(n):
+            self.nodos.add(node)
+            if len(self.nodos) == n**2: break
         #for i in range(1,n+1):
         #    for j in range(1, n+1):
         #        self.agregar(i, j)
@@ -42,14 +45,14 @@ class grafo:
                 #y tiene que agregar tambien los vecinos, y esos vecinos su vecinos y así ir verificando también que no se agregen lo mismo
                 #dos veces. Siempre que se cree un vecino, asignar también como vecino al nodo anterior
 
-    def addNodos(self, celda):
+    def addNodos(self, dim = 8, celda = nodo(1,1)):
         i = celda.fila
         j = celda.columna
         print(i, j)
         vecinos = {tuple([i-1, j-2]), tuple([i-1, j+2]), tuple([i+1, j-2]), tuple([i+1, j+2]),
                 tuple([i-2, j-1]), tuple([i-2, j+1]), tuple([i+2, j-1]), tuple([i+2, j+1])}
+        vecinos = limpiar(vecinos, dim) # eliminar las celdas inválidas
         print(vecinos)
-        vecinos = limpiar(vecinos)
         for i,j in vecinos:
             existe = False
             for nodito in self.nodos:
@@ -60,18 +63,22 @@ class grafo:
                 nodito = nodo(i,j)
             nodito.vecinos.add(celda)
             celda.vecinos.add(nodito)
-        self.nodos.add(celda)
+        #self.nodos.add(celda)
+        for vecino in celda.vecinos:
+            yield self.addNodos(dim, vecino)
+            print("Tamaño:",len(self.nodos),"\n")
+        yield celda
 
-def limpiar(lista):
+def limpiar(lista, dim):
     lista2 = lista.copy()
     for elemento in lista:
-        if noesValido(elemento):
+        if noesValido(elemento, dim):
             lista2.remove(elemento)
     return lista2
 
-def noesValido(tupla):
+def noesValido(tupla, dim):
     i, j = tupla
-    return i<1 or j<1
+    return i<1 or j<1 or i>dim or j>dim
 
 a = grafo(3)
 print(a)
