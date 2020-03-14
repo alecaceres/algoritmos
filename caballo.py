@@ -62,8 +62,8 @@ def knightTour(tablero, caballo, N, mat, num = 1):
     #print(caballo)
     row = caballo.fila
     col = caballo.columna
-    if num == N**2 and mat[row-1][col-1] == 1:
-        print(mat)
+    if num == N**2 and mat[row-1][col-1] == 1 and mat.all():
+        print(mat, "\n")
         return True
     if mat[row-1][col-1]:
         return False
