@@ -1,3 +1,5 @@
+import numpy
+
 class nodo:
     def __init__(self, fila, columna):
         self.fila = fila
@@ -31,9 +33,6 @@ class grafo:
 
     def __init__(self, n = 8):
         self.nodos = set()
-        self.soluciones = 0
-
-        #self.addNodos(n)
         for i in range(1,n+1):
             for j in range(1, n+1):
                 self.nodos.add(self.addNodos(n, nodo(i,j)))
@@ -59,5 +58,30 @@ def noesValido(tupla, dim):
     i, j = tupla
     return i<1 or j<1 or i>dim or j>dim
 
-a = grafo()
-print(a)
+def knightTour(tablero, caballo, N, mat, num = 1):
+    #print(caballo)
+    row = caballo.fila
+    col = caballo.columna
+    if num == N**2 and mat[row-1][col-1] == 1:
+        print(mat)
+        return True
+    if mat[row-1][col-1]:
+        return False
+    mat[row-1][col-1] = num
+    num += 1
+    for vecino in caballo.vecinos:
+        vecino = tablero.addNodos(N, vecino)
+        if knightTour(tablero, vecino, N, mat, num):
+            return True
+    mat[row-1][col-1] = 0
+    return False
+
+def haySolucion(tablero,  N = 8):
+    for caballo in tablero.nodos:
+        if knightTour(tablero, caballo, N, numpy.zeros((N,N), dtype=int)):
+            return True
+    return False
+
+n = 5
+a = grafo(n)
+print(haySolucion(a,n))
