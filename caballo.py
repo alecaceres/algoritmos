@@ -59,21 +59,20 @@ def noesValido(tupla, dim):
     return i<1 or j<1 or i>dim or j>dim
 
 def knightTour(tablero, caballo, N, mat, num = 1):
-    #print(caballo)
     row = caballo.fila
     col = caballo.columna
-    if num == N**2 and mat[row-1][col-1] == 1 and mat.all():
+    if num == N**2 and mat[row-1,col-1] == 1 and mat.all():
         print(mat, "\n")
         return True
-    if mat[row-1][col-1]:
+    if mat[row-1,col-1]:
         return False
-    mat[row-1][col-1] = num
+    mat[row-1,col-1] = num
     num += 1
     for vecino in caballo.vecinos:
-        vecino = tablero.addNodos(N, vecino)
+        vecino = next((x for x in tablero.nodos if x.fila == vecino.fila and x.columna == vecino.columna), None)
         if knightTour(tablero, vecino, N, mat, num):
             return True
-    mat[row-1][col-1] = 0
+    mat[row-1,col-1] = 0
     return False
 
 def haySolucion(tablero,  N = 8):
@@ -82,6 +81,6 @@ def haySolucion(tablero,  N = 8):
             return True
     return False
 
-n = 5
+n = 4
 a = grafo(n)
 print(haySolucion(a,n))
