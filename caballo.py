@@ -1,6 +1,7 @@
 import numpy
-import time
-import re
+import sys
+
+global aux
 
 class nodo:
     def __init__(self, fila, columna):
@@ -20,13 +21,13 @@ class grafo:
             print(posicion)
         return "\n"
 
-    def __init__(self, n = 8):
+    def __init__(self, n):
         self.nodos = set()
         for i in range(1,n+1):
             for j in range(1, n+1):
                 self.nodos.add(self.addNodos(n, nodo(i,j)))
 
-    def addNodos(self, dim = 8, celda = nodo(1,1)):
+    def addNodos(self, dim, celda = nodo(1,1)):
         i = celda.fila
         j = celda.columna
         centro = (dim + 1)/2
@@ -73,13 +74,15 @@ def knightTour(tablero, caballo, N, mat, num = 1):
     mat[row-1,col-1] = 0
     return False
 
-def solucion(tablero, N, row, col):
+def solucion(N, row, col):
     if N%2 == 1 or N < 6: return "No Circuit Tour.\n"
+    aux = 0
+    tablero = grafo(N)
     caballo = next((x for x in tablero.nodos if x.fila == row and x.columna == col), None)
-    mat = numpy.zeros((N,N), dtype = numpy.uint8)
-    if knightTour(tablero, caballo, N, mat): return "\n"
+    mat = numpy.zeros((N,N), dtype = numpy.uint16)
+    if knightTour(tablero, caballo, N, mat): return ""
 
-start = time.time()
-n = 6
-a = grafo(n)
-print(solucion(a, n, 2, 2))
+for line in sys.stdin:
+    linea = line.rstrip() # se eliminan los saltos de línea de creados al leer las líneas de sys.stdin
+    N, row, col = [int(x) for x in linea.split()]
+    print(solucion(N, row, col))
