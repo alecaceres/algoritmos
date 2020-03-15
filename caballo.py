@@ -58,7 +58,7 @@ def matprint(mat, fmt="g"):
             print(("{:"+str(col_maxes[i])+fmt+"}").format(y), end="  ")
         print("")
 
-def knightTour(tablero, caballo, N, mat, num = 1):
+def knightTour(nodos, caballo, N, mat, num = 1):
     row = caballo.fila
     col = caballo.columna
     if mat[row-1,col-1]:
@@ -68,8 +68,8 @@ def knightTour(tablero, caballo, N, mat, num = 1):
         matprint(mat)
         return True
     for vecino in caballo.vecinos:
-        vecino = next((x for x in tablero.nodos if x.fila == vecino.fila and x.columna == vecino.columna), None)
-        if knightTour(tablero, vecino, N, mat, num + 1):
+        vecino = next((x for x in nodos if x.fila == vecino.fila and x.columna == vecino.columna), None)
+        if knightTour(nodos, vecino, N, mat, num + 1):
             return True
     mat[row-1,col-1] = 0
     return False
@@ -80,7 +80,7 @@ def solucion(N, row, col):
     tablero = grafo(N)
     caballo = next((x for x in tablero.nodos if x.fila == row and x.columna == col), None)
     mat = numpy.zeros((N,N), dtype = numpy.uint16)
-    if knightTour(tablero, caballo, N, mat): return ""
+    if knightTour(tablero.nodos, caballo, N, mat): return ""
 
 for line in sys.stdin:
     linea = line.rstrip() # se eliminan los saltos de línea de creados al leer las líneas de sys.stdin
