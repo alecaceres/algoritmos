@@ -48,12 +48,12 @@ def noesValido(tupla, dim):
 def knightTour(tablero, caballo, N, mat, num = 1):
     row = caballo.fila
     col = caballo.columna
-    if num == N**2 and mat.all():
-        print(mat, "\n")
-        return True
     if mat[row-1,col-1]:
         return False
     mat[row-1,col-1] = num
+    if num == N**2:
+        print(mat, "\n")
+        return True
     for vecino in caballo.vecinos:
         vecino = next((x for x in tablero.nodos if x.fila == vecino.fila and x.columna == vecino.columna), None)
         if knightTour(tablero, vecino, N, mat, num + 1):
@@ -62,15 +62,16 @@ def knightTour(tablero, caballo, N, mat, num = 1):
     return False
 
 def solucion(tablero, N, row, col):
-    if N%2 == 1 or N < 5: return "No Circuit Tour."
+    #if N%2 == 1 or N < 6: return "No Circuit Tour."
     caballo = next((x for x in tablero.nodos if x.fila == row and x.columna == col), None)
-    mat = numpy.zeros((N,N), dtype = int)
+    print(caballo)
+    mat = numpy.zeros((N,N), dtype = numpy.uint8)
     return knightTour(tablero, caballo, N, mat)
 
 start = time.time()
 n = 6
-a = grafo(n, 1, 1)
+a = grafo(n)
 print("Creado en", time.time() - start)
 #print(haySolucion(a,n))
-print(solucion(a, n))
+print(solucion(a, n, 2, 2))
 print("Se tardo", time.time() - start)
