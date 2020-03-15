@@ -48,7 +48,7 @@ def noesValido(tupla, dim):
 def knightTour(tablero, caballo, N, mat, num = 1):
     row = caballo.fila
     col = caballo.columna
-    if num == N**2 and mat[row-1,col-1] == 1 and mat.all():
+    if num == N**2 and mat.all():
         print(mat, "\n")
         return True
     if mat[row-1,col-1]:
@@ -61,33 +61,16 @@ def knightTour(tablero, caballo, N, mat, num = 1):
     mat[row-1,col-1] = 0
     return False
 
-def haySolucion(tablero,  N = 8):
-    mat = numpy.zeros((N,N), dtype=numpy.int8)
-    if N%2:
-        centro = (N+1)//2
-        for i in range(N):
-            for caballo in tablero.nodos:
-                if abs(caballo.fila - centro) + abs(caballo.columna - centro) == i:
-                    print(caballo)
-                    if knightTour(tablero, caballo, N, mat):
-                        return True
-    centro = (N+1)/2
-    for i in range(N):
-        for caballo in tablero.nodos:
-            if abs(caballo.fila - centro) + abs(caballo.columna - centro) == i:
-                print(caballo)
-                if knightTour(tablero, caballo, N, mat):
-                    return True
-    return False
-
-def teoria(N):
+def solucion(tablero, N, row, col):
     if N%2 == 1 or N < 5: return "No Circuit Tour."
-    return "Bueno"
+    caballo = next((x for x in tablero.nodos if x.fila == row and x.columna == col), None)
+    mat = numpy.zeros((N,N), dtype = int)
+    return knightTour(tablero, caballo, N, mat)
 
 start = time.time()
 n = 6
-a = grafo(n)
+a = grafo(n, 1, 1)
 print("Creado en", time.time() - start)
 #print(haySolucion(a,n))
-print(teoria(n))
+print(solucion(a, n))
 print("Se tardo", time.time() - start)
