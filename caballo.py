@@ -74,14 +74,12 @@ def knightTour(tablero, caballo, N, mat, num = 1):
     return False
 
 def solucion(tablero, N, row, col):
-    if N%2 == 1 or N < 6: return "No Circuit Tour."
+    if N%2 == 1 or N < 6: return "No Circuit Tour.\n"
     caballo = next((x for x in tablero.nodos if x.fila == row and x.columna == col), None)
     mat = numpy.zeros((N,N), dtype = numpy.uint8)
-    return knightTour(tablero, caballo, N, mat)
+    if knightTour(tablero, caballo, N, mat): return "\n"
 
 start = time.time()
 n = 6
 a = grafo(n)
-print("Creado en", time.time() - start)
 print(solucion(a, n, 2, 2))
-print("Se tardo", time.time() - start)
