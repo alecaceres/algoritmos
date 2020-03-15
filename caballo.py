@@ -1,14 +1,10 @@
 import numpy
-
+import time
 class nodo:
     def __init__(self, fila, columna):
         self.fila = fila
         self.columna = columna
         self.vecinos = set()
-
-    def addVecino(self, vecinos):
-        for vecino in vecinos:
-            self.vecinos.add(vecino)
 
     def __str__(self):
         print("Posicion:", self.fila, ",", self.columna, "\nVecinos:")
@@ -21,15 +17,6 @@ class grafo:
         for posicion in self.nodos:
             print(posicion)
         return "\n"
-
-    def agregar(celdas, i, j):
-        for celda in celdas.nodos:
-            if celda.fila == i and celda.columna == j: #si la celda que se quiere agregar ya está en el set
-                return celdas
-
-        celda = nodo(i,j)
-        celda.addVecino(celdas.nodos)
-        celdas.nodos.add(celda)
 
     def __init__(self, n = 8):
         self.nodos = set()
@@ -67,20 +54,40 @@ def knightTour(tablero, caballo, N, mat, num = 1):
     if mat[row-1,col-1]:
         return False
     mat[row-1,col-1] = num
-    num += 1
     for vecino in caballo.vecinos:
         vecino = next((x for x in tablero.nodos if x.fila == vecino.fila and x.columna == vecino.columna), None)
-        if knightTour(tablero, vecino, N, mat, num):
+        if knightTour(tablero, vecino, N, mat, num + 1):
             return True
     mat[row-1,col-1] = 0
     return False
 
 def haySolucion(tablero,  N = 8):
-    for caballo in tablero.nodos:
-        if knightTour(tablero, caballo, N, numpy.zeros((N,N), dtype=int)):
-            return True
+    mat = numpy.zeros((N,N), dtype=numpy.int8)
+    if N%2:
+        centro = (N+1)//2
+        for i in range(N):
+            for caballo in tablero.nodos:
+                if abs(caballo.fila - centro) + abs(caballo.columna - centro) == i:
+                    print(caballo)
+                    if knightTour(tablero, caballo, N, mat):
+                        return True
+    centro = (N+1)/2
+    for i in range(N):
+        for caballo in tablero.nodos:
+            if abs(caballo.fila - centro) + abs(caballo.columna - centro) == i:
+                print(caballo)
+                if knightTour(tablero, caballo, N, mat):
+                    return True
     return False
 
-n = 4
+def teoria(N):
+    if N%2 == 1 or N < 5: return "No Circuit Tour."
+    return "Bueno"
+
+start = time.time()
+n = 6
 a = grafo(n)
-print(haySolucion(a,n))
+print("Creado en", time.time() - start)
+#print(haySolucion(a,n))
+print(teoria(n))
+print("Se tardo", time.time() - start)
