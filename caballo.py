@@ -1,7 +1,9 @@
 import numpy
-import sys
 
-global aux
+import resource, sys
+resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
+sys.setrecursionlimit(10**6)
+
 
 class nodo:
     def __init__(self, fila, columna):
@@ -76,7 +78,6 @@ def knightTour(nodos, caballo, N, mat, num = 1):
 
 def solucion(N, row, col):
     if N%2 == 1 or N < 6: return "No Circuit Tour.\n"
-    aux = 0
     tablero = grafo(N)
     caballo = next((x for x in tablero.nodos if x.fila == row and x.columna == col), None)
     mat = numpy.zeros((N,N), dtype = numpy.uint16)

@@ -1,3 +1,5 @@
+import sys
+
 class nodo:
     def __init__(self, fila, columna):
         self.fila = fila
@@ -17,8 +19,9 @@ class nodo:
 class grafo:
     def __init__(self, n = 8):
         self.filas = set()
-        self.soluciones = 0
         self.raiz = nodo(0,0)
+        self.soluciones = 0
+        self.list_soluciones = []
 
         self.filas.add(tuple([self.raiz])) # el tablero vacío
         for i in range(1,n+1):
@@ -46,25 +49,35 @@ class grafo:
                 print(v)
         return ""
 
-def solucion(tablero):
-    colocarReina(tablero, [], tablero.raiz)
-    return tablero.soluciones
+def solucion(tablero, row, col):
+    colocarReina(tablero, [], tablero.raiz, row, col)
 
-def colocarReina(tablero, reinas, reina): # la entrada son las reinas colocadas y la nueva reina
+
+
+def colocarReina(tablero, reinas, reina, row, col): # la entrada son las reinas colocadas y la nueva reina
+    if reina.fila == row and reina.columna != col:
+        return
+    sol = ""
     for r in reinas:
         if abs(r.fila - reina.fila) == abs(r.columna - reina.columna) or r.columna == reina.columna:
             return
+        sol = sol + str(r.columna) + " "
     if len(reina.vecinos) == 0:
-        tablero.soluciones = tablero.soluciones + 1
-        #print("\nSoluciones: ", tablero.soluciones)
+        sol = sol + str(reina.columna)
+        tablero.soluciones += 1
+        print(" " + str(tablero.soluciones) + "\t" + sol)
+        tablero.list_soluciones.append(sol)
         return
 
     if reina.fila: reinas.append(reina)
 
     for vecino in reina.vecinos:
-        #reinas2 = reinas
-        #reinas2.append(vecino)
-        colocarReina(tablero, reinas.copy(), vecino)
+        colocarReina(tablero, reinas.copy(), vecino, row, col)
 
-a = grafo()
-print("El problema tiene", solucion(a), "soluciones")
+for line in sys.stdin:
+    linea = line.rstrip() # se eliminan los saltos de línea de creados al leer las líneas de sys.stdin
+    if len(linea) > 1:
+        print("SOLN       ROW\n #      1 2 3 4 5 6 7 8\n")
+        row, col = [int(x) for x in linea.split()]
+        solucion(grafo(), col, row)
+        print("\n")
