@@ -2,18 +2,31 @@ from statistics import mean
 import sys
 
 def imbalance(C, S, masses):
-    masses.sort()
+    sorted = masses.copy()
+    sorted.sort()
     A = sum(masses)/C
+
     padding = [0]*(2*C-S)
-    masses = padding + masses
+    sorted = padding + sorted
     imbalance = 0
-    for i in range(C):
-        print(str(i) + ":", end = '')
-        if masses[i]: print("", masses[i], end = '')
-        if masses[2*C-i-1]: print("", masses[2*C-i-1])
-        Xi = (masses[i] + masses[2*C-i-1])
-        imbalance += abs(Xi-A)
-    print("Imbalace=", imbalance, '\n')
+    counter = 0
+    for i in range(len(masses)):
+        if masses[i] in sorted:
+            print(" "+str(counter)+":", masses[i], end = '')
+            index_0 = sorted.index(masses[i])
+            index_1 = len(sorted) - index_0 - 1
+            if sorted[index_1]: print("", sorted[index_1])
+            else: print()
+            Xi = (sorted[index_0] + sorted[index_1])
+            imbalance += abs(Xi-A)
+            if index_1<index_0: index_0, index_1 = index_1, index_0
+            del sorted[index_1]
+            del sorted[index_0]
+            counter+=1
+    for i in range(counter, C):
+        print(" "+str(i)+":")
+        imbalance += abs(A)
+    print("IMBALANCE = {:.5f}".format(round(imbalance, 5)) + '\n')
 
 set_number = 1
 for i, line in enumerate(sys.stdin):
