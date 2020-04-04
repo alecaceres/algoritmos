@@ -8,7 +8,7 @@ def imbalance(C, S, masses):
     masses = padding + masses
     imbalance = 0
     for i in range(C):
-        print("Contenedor", str(i) + ":", end = '')
+        print(str(i) + ":", end = '')
         if masses[i]: print("", masses[i], end = '')
         if masses[2*C-i-1]: print("", masses[2*C-i-1])
         Xi = (masses[i] + masses[2*C-i-1])
