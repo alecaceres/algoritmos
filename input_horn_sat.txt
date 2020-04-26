@@ -1,0 +1,6 @@
+(not x1 or not x2 or not x3) and (not x2) and (x1 and x4 si x2) and (x1) and (si x3)
+(w and y and z si x) and (x and z si w) and (x si y) and (si x) and (x and y si w) and (not w or not x or not y) and (not z)
+(x si y) and (y si x) and (not y or not a)
+(si x) and (si y) and (x si y)
+(si x) and (not x or not y) and (si y) and (x si y)
+(si x) and (si y) and (w and x si y)

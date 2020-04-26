@@ -11,12 +11,6 @@ def satisfability(expression):
         verdaderos, falsos = implicacionSatisfacible(implicacion,
                                                             verdaderos, falsos)
 
-        # Verificando si la las implicaciones ya son todas verdaderas
-    for implicacion in implicaciones:
-        if not implicacionSatisfacible(implicacion, verdaderos, falsos):
-            print("\nLa fórmula no es satisfacible")
-            return
-
     for negativa in negativas:
         if not negativaSatisfacible(negativa, falsos):
             print("\nLa fórmula no es satisfacible")
@@ -24,7 +18,7 @@ def satisfability(expression):
 
     print("\n\nVerdaderos:", verdaderos, "\nFalsos:", falsos)
 
-def implicacionSatisfacible(implicacion, verdaderos, falsos, verificacion = False):
+def implicacionSatisfacible(implicacion, verdaderos, falsos):
     '''
     Se cambia a verdadero el lado derecho de la implicación en caso de que la
     implicación sea falsa
@@ -34,13 +28,10 @@ def implicacionSatisfacible(implicacion, verdaderos, falsos, verificacion = Fals
         satisfacible = satisfacible and literal in verdaderos
     satisfacible = not satisfacible
     satisfacible = satisfacible or implicacion[-1] in verdaderos
-    if not verificacion: # sirve para la primera vez que se cambia cada literal
-        if not satisfacible:
-            falsos.remove(implicacion[-1])
-            verdaderos.add(implicacion[-1])
-        return verdaderos, falsos
-    return satisfacible # en caso de que esté en modo verificación para saber
-                        # si se puede avanzar al siguiente paso
+    if not satisfacible:
+        falsos.remove(implicacion[-1])
+        verdaderos.add(implicacion[-1])
+    return verdaderos, falsos
 
 
 def negativaSatisfacible(negativa, falsos):
