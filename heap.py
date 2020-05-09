@@ -10,15 +10,17 @@ class Graph:
         Se asigna s.d = 0, ya que la distancia de la fuente a si misma es cero
         """
         s.d = 0
+        #for node in self.nodes: print(node.d) # Prueba de que funciona
 
 class Node:
-    def __init__(self):
+    def __init__(self, key):
         """
         Por defecto tiene las propiedades d = None (representando infinito) y
         pi = None (representando que no tiene un nodo padre). Además,
         inicialmente se considera que ese vértice no tiene vecinos.
         """
-        self.d = None
+        self.key = key
+        self.d = float("inf")
         self.pi = None
         self.neighbours = set()
 
@@ -28,14 +30,6 @@ class Node:
         '''
         self.neighbours.add((v, weight))
 
-    def getDistance(self, v):
-        '''
-        Cálculo del peso de la arista self-v
-        '''
-        for neighbour in self.neighbours:
-            if v is neighbour[0]:
-                return neighbour[1]
-
 class HeapVector:
     def __init__(self, queue: list):
         '''
@@ -43,7 +37,7 @@ class HeapVector:
         heap_size representa el número de elementos en el heap
         '''
         self.length = len(queue)
-        self.heap_size = 0
+        self.heap_size = len(queue)
         self.queue = queue
 
     def parent(self, i):
@@ -73,11 +67,13 @@ class HeapVector:
         '''
         l = self.left(i)
         r = self.right(i)
-        if l <= self.heap_size and self.queue[l] < self.queue[i]: smallest = l
+        #print(f'i = {i}\tl = {l}\tr = {r}\tlength = {self.length}\theap_size = {self.heap_size}')
+        if l <= self.heap_size and self.queue[l-1].key < self.queue[i-1].key: smallest = l
         else: smallest = i
-        if r <= self.heap_size and self.queue[r] < self.queue[smallest]: smallest = r
+        if r <= self.heap_size and self.queue[r-1].key < self.queue[smallest-1].key: smallest = r
         if smallest != i:
-            self.queue[i], self.queue[smallest] = self.queue[smallest], self.queue[i]
+            self.queue[i-1], self.queue[smallest-1] = self.queue[smallest-1], self.queue[i-1]
+            print(f'i = {i}\tl = {l}\tr = {r}\tlength = {self.length}\theap_size = {self.heap_size}\tsmallest = {smallest}\n')
             self.MinHeapify(smallest)
 
     def minimum(self):
@@ -85,9 +81,9 @@ class HeapVector:
 
     def ExtractMin(self):
         try: min = self.queue.pop(0)
-        except: print("ERROR. Heap underflow."); sys(-1)
+        except: print("ERROR. Heap underflow.")
         self.heap_size -= 1
-        self.MinHeapify(0)
+        self.MinHeapify(1)
         return min
 
     def HeapDecreaseKey(self, i, key):
