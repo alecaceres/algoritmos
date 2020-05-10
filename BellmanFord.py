@@ -1,6 +1,7 @@
 import heap
 
 def BFShortestPaths(G, s):
+    G.InitializeSingleSource(s)
     for i in range(len(G.nodes)):
         for u in G.nodes:
             for (v, w) in u.neighbours:
