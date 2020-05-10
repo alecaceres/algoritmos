@@ -9,6 +9,9 @@ class Graph:
         """
         Se asigna s.d = 0, ya que la distancia de la fuente a si misma es cero
         """
+        for v in self.nodes:
+            v.d = float("inf")
+            v.pi = None
         s.d = 0
         #for node in self.nodes: print(node.d) # Prueba de que funciona
 
@@ -80,8 +83,8 @@ class HeapVector:
         return self.queue[0]
 
     def ExtractMin(self):
-        try: min = self.queue.pop(0)
-        except: print("ERROR. Heap underflow.")
+        if not self.queue: raise ValueError("Heap Underflow")
+        min = self.queue.pop(0)
         self.heap_size -= 1
         self.MinHeapify(1)
         return min
@@ -107,6 +110,32 @@ def Relax(u, v, w):
     u, v:   vértices
     w:      peso de la arista uv
     """
+    #print(f'\nu.key = {u.key}, v.key = {v.key}, v.d = {v.d}, u.d = {u.d}, w = {w}')
     if v.d > u.d + w:
         v.d = u.d + w
         v.pi = u
+    #print(f'u.key = {u.key}, v.key = {v.key}, v.d = {v.d}, u.d = {u.d}, w = {w}\n')
+    #if v.pi is not None: print(f'Padre de {v.key} es {v.pi.key}')
+
+def yaml2graph(path = 'input_dijkstra.yaml'):
+    import yaml
+    '''
+    El grafo se representa de la siguiente forma en el archivo yaml:
+    key1: [[keyneighbour1, weight1], [keyneighbour2, weight2], ...]
+    .
+    .
+    .
+    keyN: [[keyneighbour1, weight1], ..., [keyneighbourN, weightN]]
+    '''
+    graph = yaml.load(open(path, 'r'), Loader=yaml.Loader)
+    nodes = []
+    for key, neighbours in graph.items():
+        nodes.append(Node(key))
+    for i, (key, neighbours) in enumerate(graph.items()):
+        for neighbour in neighbours:
+            try: neighbour_node = next(x for x in nodes if x.key == neighbour[0])
+            except: print(f"No se encuentra nodo con la clave {key}.")
+            nodes[i].addNeighbour(neighbour_node, neighbour[1])
+    nodes.sort(key = lambda x: x.key)
+    G = Graph(nodes)
+    return G
