@@ -1,0 +1,9 @@
+# ejemplo: https://www.researchgate.net/profile/Arnaud_De_La_Fortelle/publication/237012833/figure/fig2/AS:613895102279694@1523375406205/An-example-of-directed-acyclic-graph-DAG-Suppose-that-this-graph-is-the-sub-graph-G-as.png
+1: [[3, 3]]
+3: [[6, 2]]
+6: []
+2: [[4, 2], [5, 6]]
+4: [[6, 1], [7, 6]]
+7: [[8, 4]]
+5: [[7, 2]]
+8: []
