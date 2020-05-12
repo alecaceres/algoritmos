@@ -13,7 +13,6 @@ class Graph:
             v.d = float("inf")
             v.pi = None
         s.d = 0
-        #for node in self.nodes: print(node.d) # Prueba de que funciona
 
 class Node:
     def __init__(self, key):
@@ -70,13 +69,11 @@ class HeapVector:
         '''
         l = self.left(i)
         r = self.right(i)
-        #print(f'i = {i}\tl = {l}\tr = {r}\tlength = {self.length}\theap_size = {self.heap_size}')
         if l <= self.heap_size and self.queue[l-1].key < self.queue[i-1].key: smallest = l
         else: smallest = i
         if r <= self.heap_size and self.queue[r-1].key < self.queue[smallest-1].key: smallest = r
         if smallest != i:
             self.queue[i-1], self.queue[smallest-1] = self.queue[smallest-1], self.queue[i-1]
-            print(f'i = {i}\tl = {l}\tr = {r}\tlength = {self.length}\theap_size = {self.heap_size}\tsmallest = {smallest}\n')
             self.MinHeapify(smallest)
 
     def minimum(self):
@@ -95,14 +92,14 @@ class HeapVector:
         con key < A[i].
         '''
         self.queue[i] = key
-        while i>1 and self.queue[self.parent(i)] > self.queue[i]:
+        while i and self.queue[self.parent(i)].key > self.queue[i].key:
             self.queue[self.parent(i)], self.queue[i] = self.queue[i], self.queue[self.parent(i)]
             i = self.parent(i)
 
     def MinHeapInsert(self, key):
         self.heap_size += 1
-        self.queue[self.heap_size] = None
-        self.HeapDecreaseKey(self.heap_size, key)
+        self.queue.append(float("inf"))
+        self.HeapDecreaseKey(self.heap_size - 1, key)
 
 
 def Relax(u, v, w):
@@ -110,12 +107,9 @@ def Relax(u, v, w):
     u, v:   vértices
     w:      peso de la arista uv
     """
-    #print(f'\nu.key = {u.key}, v.key = {v.key}, v.d = {v.d}, u.d = {u.d}, w = {w}')
     if v.d > u.d + w:
         v.d = u.d + w
         v.pi = u
-    #print(f'u.key = {u.key}, v.key = {v.key}, v.d = {v.d}, u.d = {u.d}, w = {w}\n')
-    #if v.pi is not None: print(f'Padre de {v.key} es {v.pi.key}')
 
 def yaml2graph(path = 'input_dijkstra.yaml'):
     import yaml
