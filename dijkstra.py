@@ -10,9 +10,8 @@ def dijkstra(G, s):
         u = Q.ExtractMin()
         S.add(u)
         for (v, w) in u.neighbours:
-            if v.d > u.d + w: Q.MinHeapInsert(v)
             heap.Relax(u, v, w)
-    print("Iteraciones", i)
+            if v not in S: Q.HeapDecreaseKey(Q.queue.index(v), v)
 G = heap.yaml2graph()
 for node in G.nodes:
     dijkstra(G, node)

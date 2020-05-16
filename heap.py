@@ -69,9 +69,9 @@ class HeapVector:
         '''
         l = self.left(i)
         r = self.right(i)
-        if l <= self.heap_size and self.queue[l-1].key < self.queue[i-1].key: smallest = l
+        if l <= self.heap_size and self.queue[l-1].d < self.queue[i-1].d: smallest = l
         else: smallest = i
-        if r <= self.heap_size and self.queue[r-1].key < self.queue[smallest-1].key: smallest = r
+        if r <= self.heap_size and self.queue[r-1].d < self.queue[smallest-1].d: smallest = r
         if smallest != i:
             self.queue[i-1], self.queue[smallest-1] = self.queue[smallest-1], self.queue[i-1]
             self.MinHeapify(smallest)
@@ -92,7 +92,7 @@ class HeapVector:
         con key < A[i].
         '''
         self.queue[i] = key
-        while i and self.queue[self.parent(i)].key > self.queue[i].key:
+        while i and self.queue[self.parent(i)].d > self.queue[i].d:
             self.queue[self.parent(i)], self.queue[i] = self.queue[i], self.queue[self.parent(i)]
             i = self.parent(i)
 
@@ -130,6 +130,6 @@ def yaml2graph(path = 'input_dijkstra.yaml'):
             try: neighbour_node = next(x for x in nodes if x.key == neighbour[0])
             except: print(f"No se encuentra nodo con la clave {key}.")
             nodes[i].addNeighbour(neighbour_node, neighbour[1])
-    nodes.sort(key = lambda x: x.key)
+    nodes.sort(key = lambda x: x.d)
     G = Graph(nodes)
     return G
