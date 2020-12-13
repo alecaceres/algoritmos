@@ -102,10 +102,44 @@ def nextBlackMovement(G):
     Esta función se encarga de implementar la lógica de la siguiente
     jugada del jugador negro.
     '''
-    (src, dest) = random.choice(getPossibleMovements(G, player = 2))
-    dest, src = (dest, src) if G.nodes[dest]['player'] != 1 else (src, dest)
-    input('Enter para continuar')
-    return (src%7, src//7), (dest%7, dest//7)
+    val_max = float('-inf')
+    src_max = dest_max = None
+    for (src, dest) in getPossibleMovements(G, player = 2):
+        dest, src = (dest, src) if G.nodes[dest]['player'] != 1 else (src, dest)
+        val_max, src_max, dest_max = max((val_max, src_max, dest_max),
+                                        (minimax(simulateMovement(G,src,dest,player=2),
+                                        depth = config['depth']),
+                                        src, dest), key = lambda x: x[0])
+    return (src_max%7, src_max//7), (dest_max%7, dest_max//7)
+
+def simulateMovement(G,src,dest,player):
+    G_copy = G.copy()
+    G_copy, _ = addPlayer(G_copy, (src%7, src//7), (dest%7, dest//7), player)
+    return G_copy
+
+def minimax(G, depth, alpha = float('inf'),
+            beta = float('-inf'), maximisingPlayer = True):
+    if not depth: # or game over
+        return random.randint(-20,20)
+
+    if maximisingPlayer:
+        maxEval = float('-inf')
+        for (src, dest) in getPossibleMovements(G, player = 1):
+            dest, src = (dest, src) if G.nodes[dest]['player'] != 2 else (src, dest)
+            eval = minimax(simulateMovement(G,src,dest,player=1), depth-1, alpha, beta, False)
+            maxEval = max(maxEval, eval)
+            alpha = max(alpha, eval)
+            if beta <= alpha: break
+        return maxEval
+    else:
+        minEval = float('inf')
+        for (src, dest) in getPossibleMovements(G, player = 2):
+            dest, src = (dest, src) if G.nodes[dest]['player'] != 1 else (src, dest)
+            eval = minimax(simulateMovement(G,src,dest,player=2), depth-1, alpha, beta, True)
+            minEval = min(minEval, eval)
+            beta = min(beta, eval)
+            if beta <= alpha: break
+        return minEval
 
 def getBoard(G):
     return [[G.nodes[i+j*7]['player'] for j in range(7)] for i in range(7)]
