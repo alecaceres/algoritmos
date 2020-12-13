@@ -12,13 +12,9 @@ def addNode(G, node):
     return G
 
 def addFirstPlayer(G, dest, player):
-    print("Adding first player...")
-    print("Destination:", dest)
     i,j = dest
-    print("Dest:", i,j)
     G.nodes[i+j*7]['player'] = player
     G = addEdges(G, *dest, player)
-    print("Edges:",G.edges)
     return G, getBoard(G)
 
 def addPlayer(G, src, dest, player):
@@ -36,10 +32,8 @@ def addPlayer(G, src, dest, player):
     G.nodes[dest_pos]['player'] = 1 if player==2 else 2 # el nodo de destino se queda pintado en el color del rival
     G.remove_edge(src_pos, dest_pos, key = 'possible_movement') # se elimina la arista src_dest como posible mov.
     G = updatePlayers(G, src_pos, src, player)
-    print("Edges to remove:", [edge for edge in G.edges(dest_pos) if G.has_edge(*edge, key = 'possible_movement')])
     G.remove_edges_from([edge for edge in G.edges(dest_pos) if G.has_edge(*edge, key = 'possible_movement')])
     G = addEdges(G, *dest, player)
-    print("Player", player, "movió de la posición", src_pos, "a la", dest_pos)
     return G, getBoard(G)
 
 def addEdges(G, i, j, player):
@@ -60,16 +54,10 @@ def updatePlayers(G, src_pos, src, player):
     '''
     i,j = src
     path_edges = {(i,j+1),(i,j-1),(i+1,j),(i-1,j),(i-1,j+1),(i+1,j-1)}
-    print("\nMoving from source", src, "=", i+j*7)
-    print("Current possible movements:")
-    for movement in path_edges:
-        if movement in [(i,j) for i in range(7) for j in range(7)]:
-            print(f"Player {G.nodes[movement[0]+movement[1]*7]['player']}\tMovement: {movement[0]+movement[1]*7}")
     path_edges = [(i+j*7, movement[0] + movement[1]*7)
                             for movement in path_edges
                             if (movement in [(i,j) for i in range(7) for j in range(7)] # si la posición existe en el tablero
                                 and G.nodes[movement[0]+movement[1]*7]['player'] == player)]
-    print(f"\nUpdating...\nSource: {src}\tSource position: {src_pos}\tPlayer: {player}\nPossible movements: {path_edges}")
     G.remove_edges_from([edge for edge in G.edges(src_pos) if not G.has_edge(*edge, key = 'possible_movement')])
     [G.add_edge(i,j, key = 'path') for (i,j) in path_edges]
     return G
@@ -83,9 +71,6 @@ def hasWon(G, player):
     G.remove_edges_from([edge for edge in G.edges if 'possible_movement' in edge])
     all_possible_paths = (list(itertools.product(range(7), range(41,49))
                         if player == 2 else list(itertools.product(range(0,49,7), range(6,49,7)))))
-    print("Edges with paths:", G.edges, "\nHas path:", [(player, src, dest, has_path(G, src, dest))
-                for (src, dest) in all_possible_paths
-                if (G.nodes[src]['player'] == player and G.nodes[dest]['player'] == player)])
     return any([has_path(G, src, dest)
                 for (src, dest) in all_possible_paths
                 if (G.nodes[src]['player'] == player and G.nodes[dest]['player'] == player)])
