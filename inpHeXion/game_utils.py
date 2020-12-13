@@ -2,6 +2,9 @@ import networkx as nx
 from networkx.algorithms.shortest_paths.generic import has_path
 import itertools
 import random
+import json
+
+config = json.load(open('config.json'))
 
 def addNode(G, node):
     i,j = node
