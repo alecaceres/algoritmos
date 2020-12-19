@@ -89,12 +89,15 @@ def nextBlackMovement(G):
     '''
     val_max = float('-inf')
     src_max = dest_max = None
+    print("\nCalculating next Black Move...")
     for (src, dest) in getPossibleMovements(G, player = 2):
+        print("From",src,"to",dest)
         dest, src = (dest, src) if G.nodes[dest]['player'] != 1 else (src, dest)
         val_max, src_max, dest_max = max((val_max, src_max, dest_max),
                                         (minimax(simulateMovement(G,src,dest,player=2),
                                         depth = config['depth']),
                                         src, dest), key = lambda x: x[0])
+        print("Value so far:", val_max)
     return (src_max%7, src_max//7), (dest_max%7, dest_max//7)
 
 def simulateMovement(G,src,dest,player):

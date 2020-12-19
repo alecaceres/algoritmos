@@ -27,7 +27,6 @@ def main(window):
             time.sleep(60)
             break
         # turno de la ficha negra
-        time.sleep(1)
         src, dest = nextBlackMovement(G)
         G, board = addPlayer(G, src, dest, 2)
         window.print_board(board)
