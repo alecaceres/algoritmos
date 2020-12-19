@@ -7,11 +7,17 @@ import json
 config = json.load(open('config.json'))
 
 def addNode(G, node):
+    '''
+    Función llamada para inicializar cada nodo con player 0.
+    '''
     i,j = node
     G.add_node(i+j*7)
     return G
 
 def addFirstPlayer(G, dest, player):
+    '''
+    Función llamada para agregar al primer jugador en el tablero.
+    '''
     i,j = dest
     G.nodes[i+j*7]['player'] = player
     G = addEdges(G, *dest, player)
@@ -37,6 +43,9 @@ def addPlayer(G, src, dest, player):
     return G, getBoard(G)
 
 def addEdges(G, i, j, player):
+    '''
+    Función para agregar aristas luego de una jugada.
+    '''
     possible_movements = {(i,j+1),(i,j-1),(i+1,j),(i-1,j),(i-1,j+1),(i+1,j-1)}
     possible_movements = [(i+j*7,
                            movement[0] + movement[1]*7,
@@ -46,6 +55,7 @@ def addEdges(G, i, j, player):
     [G.add_edge(i,j, key = 'possible_movement') for (i,j,p) in possible_movements if not p]
     [G.add_edge(i,j, key = 'path') for (i,j, p) in possible_movements if p and p!=player]
     return G
+
 def updatePlayers(G, src_pos, src, player):
     '''
     Se actualizan las aristas (tienen la etiqueta de possible_movement si
@@ -76,6 +86,9 @@ def hasWon(G, player):
                 if (G.nodes[src]['player'] == player and G.nodes[dest]['player'] == player)])
 
 def getPossibleMovements(G, player):
+    '''
+    Retorna una lista con las jugadas posibles.
+    '''
     edges = [edge for edge in G.edges]
     edges.extend([(y,x,attr) for (x,y,attr) in edges])
     return [edge[1::-1] for edge in edges
@@ -89,15 +102,12 @@ def nextBlackMovement(G):
     '''
     val_max = float('-inf')
     src_max = dest_max = None
-    print("\nCalculating next Black Move...")
     for (src, dest) in getPossibleMovements(G, player = 2):
-        print("From",src,"to",dest)
         dest, src = (dest, src) if G.nodes[dest]['player'] != 1 else (src, dest)
         val_max, src_max, dest_max = max((val_max, src_max, dest_max),
                                         (minimax(simulateMovement(G,src,dest,player=2),
                                         depth = config['depth']),
                                         src, dest), key = lambda x: x[0])
-        print("Value so far:", val_max)
     return (src_max%7, src_max//7), (dest_max%7, dest_max//7)
 
 def simulateMovement(G,src,dest,player):
@@ -108,7 +118,7 @@ def simulateMovement(G,src,dest,player):
 def minimax(G, depth, alpha = float('inf'),
             beta = float('-inf'), maximisingPlayer = True):
     if not depth: # or game over
-        return random.randint(-20,20)
+        return heuristic(G, player = int(maximisingPlayer)+1)
 
     if maximisingPlayer:
         maxEval = float('-inf')
@@ -128,6 +138,18 @@ def minimax(G, depth, alpha = float('inf'),
             beta = min(beta, eval)
             if beta <= alpha: break
         return minEval
+
+def heuristic(G, player):
+    '''
+    Devuelve el diámetro de la componente conectada de mayor diámetro.
+    Para ello, se considera solamente al grafo con los nodos iguales al jugador.
+    '''
+    G = G.copy()
+    G.remove_edges_from([edge for edge in G.edges if 'possible_movement' in edge])
+    G.remove_nodes_from([node for node in G.nodes if G.nodes[node]['player']!=player])
+    largest_cc = max((G.subgraph(g) for g in nx.connected_components(G)), default = 0,
+                     key = nx.algorithms.distance_measures.diameter)
+    return len(largest_cc)
 
 def getBoard(G):
     return [[G.nodes[i+j*7]['player'] for j in range(7)] for i in range(7)]
